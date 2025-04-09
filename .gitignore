@@ -1,0 +1,9 @@
+/.idea/
+
+/design-in-progress/
+
+/frontend/dist/
+/frontend/target/
+
+/src-tauri/target/
+/src-tauri/gen/schemas

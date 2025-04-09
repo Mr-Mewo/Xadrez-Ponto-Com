@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "Xadrez Ponto EXE",
+        "title": "XadrezPontoCom.exe",
         "width": 800,
         "height": 600,
         "resizable": true,
