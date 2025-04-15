@@ -1,0 +1,11 @@
+[build]
+target = "index.html"
+
+[serve]
+[[serve.static_dirs]]
+dir = "assets"
+
+##[[hooks]]
+##stage = "build"
+##command = "xcopy"
+##command_arguments = ["assets", "dist", "/E", "/I", "/Y"]

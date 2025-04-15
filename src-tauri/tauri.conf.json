@@ -5,8 +5,8 @@
   "identifier": "com.tauri.dev",
   "build": {
     "frontendDist": "../frontend/dist",
-    "beforeDevCommand": "cd frontend && trunk serve",
-    "beforeBuildCommand": "cd frontend && trunk build --release"
+    "beforeDevCommand": "run-web.bat",
+    "beforeBuildCommand": "build-web.bat"
   },
   "app": {
     "windows": [
