@@ -1,78 +1,25 @@
-$img: var(--img);
-$size: var(--size);
+
+// $slice-size: var(--9slc-size);
 
 .nine-slice {
-    position: absolute;
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    //border: 1px solid red;
+    .slices {
+        // display: none;
 
-    //p:before {
-    //    content: var(--img);
-    //}
-
-    div {
+        pointer-events: none;
         position: absolute;
-        // border: 1px solid blue;
-        padding: 2px;
-        background-image: $img;
-        background-size: calc($size*9);
-        width: calc($size*3);
-        height: calc($size*3);
+        //top: -1px; // Fixing bugs 101
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: -1;
+
+        margin: 0;
+        padding: 0;
     }
 
-    $pos: calc(50% - $size*1.5);
-
-    .top-left {
-        top: 0;
-        left: 0;
-        background-position: top left;
-    }
-    .top {
-        top: 0;
-        left: $pos;
-        right: $pos;
-        background-position: top center;
-    }
-    .top-right {
-        top: 0;
-        right: 0;
-        background-position: top right;
-    }
-    .left {
-        top: $pos;
-        left: 0;
-        bottom: $pos;
-        background-position: center left;
-    }
-    .center {
-        top: $pos;
-        left: $pos;
-        right: $pos;
-        bottom: $pos;
-        background-position: center center;
-    }
-    .right {
-        top: $pos;
-        right: 0;
-        bottom: $pos;
-        background-position: center right;
-    }
-    .bottom-left {
-        bottom: 0;
-        left: 0;
-        background-position: bottom left;
-    }
-    .bottom {
-        bottom: 0;
-        left: $pos;
-        right: $pos;
-        background-position: bottom center;
-    }
-    .bottom-right {
-        bottom: 0;
-        right: 0;
-        background-position: bottom right;
+    *:not(.slices) {
+        z-index: 0;
     }
 }

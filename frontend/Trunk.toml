@@ -2,6 +2,8 @@
 target = "index.html"
 
 [serve]
+ignore = []
+on_rebuild = ["cls"]
 [[serve.static_dirs]]
 dir = "assets"
 
