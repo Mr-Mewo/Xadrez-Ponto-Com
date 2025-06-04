@@ -1,3 +1,5 @@
+#![allow(unused_imports)]
+
 mod notation_to_index_conversions;
 mod log;
 

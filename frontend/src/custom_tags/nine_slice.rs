@@ -1,95 +1,59 @@
 use yew::prelude::*;
-use crate::log;
 
 #[derive(Properties, PartialEq)]
 pub struct NineSliceProps {
-    pub src_begin: String,
-    #[prop_or(".png".to_string())]
-    pub src_end: String,
+    pub src: String,
     #[prop_or(48)]
     pub size: u32,
-    // Inner tags
     #[prop_or_default]
     pub children: Children,
 }
 
 #[function_component(NineSlice)]
 pub fn nine_slice(props: &NineSliceProps) -> Html {
-    let src_b = format!("assets/img/{}", props.src_begin.clone());
-    let src_e = props.src_end.clone();
-    let size = props.size.clone();
+    let src = &props.src;
+    let size = props.size;
 
-    let hr= vec!["left", "center", "right"];
-    let vr= vec!["top", "center", "down"];
+    let mut slices = Vec::new();
+
+    for h in 0..3 {
+        for v in 0..3 {
+            let width = if h == 1 { format!("calc(100% - {size}*2px)") } else { format!("{size}px") };
+            let height = if v == 1 { format!("calc(100% - {size}*2px)") } else { format!("{size}px") };
+            
+            let bg_sz_x = if h == 1 { "1000%".to_string() } else { format!("{}px", size*3) };
+            let bg_sz_y = if v == 1 { "1000%".to_string() } else { format!("{}px", size*3) };
+            
+            let bg_pos_x = if h == 1 { "50%".to_string() } else { format!("{}px", -(h * size as i32)) };
+            let bg_pos_y = if v == 1 { "50%".to_string() } else { format!("{}px", -(v * size as i32)) };
+            
+            let left = if h == 1 { format!("{size}px") } else { format!("calc((50% - {size}px/2)*{h})") };
+            let top = if v == 1 { format!("{size}px") } else { format!("calc((50% - {size}px/2)*{v})") };
+            
+            let style = format!(
+                "position: absolute;
+                width: {width};
+                height: {height};
+                background-image: url({src});
+                background-size: {bg_sz_x} {bg_sz_y};
+                background-position: {bg_pos_x} {bg_pos_y};
+                background-repeat: no-repeat;
+                left: {left};
+                top: {top};"
+            );
+            
+            slices.push(html! {
+                <div class="slice" style={ style }></div>
+            });
+        }
+    }
 
     html! {
-        // "--9slc-size" is an optional variable usable in CSS
         <div class="nine-slice" style={format!("--9sz: {size}px;")}>
-        
-        // Render Inner tags
-        { for props.children.iter() }
-        
-        <div class="slices"> {
-            hr.iter().enumerate().map(|(i, _)| {
-                vr.iter().enumerate().map(|(j, _)| {
-                    // let src = format!("{}{}{}{}", src_b, j, i, src_e);
-                    let src = format!("{}{}", src_b, src_e);
-
-                    log!("src: {}", src);
-
-                    let style = format!(
-                        "position: absolute;
-                        width: {};
-                        height: {};
-                        /*border: 1px solid red;*/
-                        background-image: url({src});
-                        background-size: {} {};
-                        background-position: {} {};
-                        background-repeat: no-repeat;
-                        content: '{i}{j}';
-                        left: {};
-                        top: {};",
-                        if i == 1 { format!("calc(100% - {size}*2px)") } else { size.to_string()+ "px" },
-                        if j == 1 { format!("calc(100% - {size}*2px)") } else { size.to_string()+ "px" },
-                        if i == 1 { "1000%".to_string() } else { (size*3).to_string()+ "px" },
-                        if j == 1 { "1000%".to_string() } else { (size*3).to_string()+ "px" },
-                        if i == 1 { "50%".to_string() } else { (-(i as i32 * size as i32)).to_string()+ "px" },
-                        if j == 1 { "50%".to_string() } else { (-(j as i32 * size as i32)).to_string()+ "px" },
-                        if i == 1 { size.to_string()+ "px" } else { format!("calc((50% - {size}px/2)*{i})") },
-                        if j == 1 { size.to_string()+ "px" } else { format!("calc((50% - {size}px/2)*{j})") },
-                    );
-                
-                    /*
-                    let style = format!(
-                        "position: absolute;
-                        width: {};
-                        height: {};
-                        border: 1px solid red;
-                        background-image: url({src});
-                        background-size: {} {};
-                        background-position: {} {};
-                        background-repeat: no-repeat;
-                        content: '{i}{j}';
-                        left: {};
-                        top: {};",
-                        if i == 1 { format!("calc(100% - {size}*2px)") } else { size.to_string()+ "px" },
-                        if j == 1 { format!("calc(100% - {size}*2px)") } else { size.to_string()+ "px" },
-                        if i == 1 { format!("calc(100% + {size}*6px)") } else { (size*3).to_string()+ "px" },
-                        if j == 1 { format!("calc(100% + {size}*6px)") } else { (size*3).to_string()+ "px" },
-                        if i == 1 { format!("calc({size}*-3px)") } else { (-(i as i32 * size as i32)).to_string()+ "px" },
-                        if j == 1 { format!("calc({size}*-3px)") } else { (-(j as i32 * size as i32)).to_string()+ "px" },
-                        // -(i as i32 * size as i32),  // Horizontal position
-                        // -(j as i32 * size as i32),  // Vertical position
-                        if i == 1 { size.to_string()+ "px" } else { format!("calc((50% - {size}px/2)*{i})") },
-                        if j == 1 { size.to_string()+ "px" } else { format!("calc((50% - {size}px/2)*{j})") },
-                    );
-                    */
-                    
-                    html! {
-                        <div class="slice" style={ style }></div>
-                    }
-                }).collect::<Html>()
-            }).collect::<Html>()
-        } </div/* slices */></div/* nine-slice */>
+            { for props.children.iter() }
+            <div class="slices">
+                { for slices.into_iter() }
+            </div>
+        </div>
     }
 }

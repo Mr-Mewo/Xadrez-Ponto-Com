@@ -1,41 +1,53 @@
-use wasm_bindgen::{prelude::*, JsCast};
 use yew::prelude::*;
+#[allow(unused_imports)] use wasm_bindgen::{prelude::*, JsCast};
 
 use crate::custom_tags as ct;
 
 #[function_component(App)]
 pub fn app() -> Html {
     let px = use_state(|| 4);
-    
-    let px_add = {
+
+    let _px_add = {
         let px = px.clone();
-        Callback::from(move |_| px.set(*px + 1))
+        Callback::from(move |_: i32| px.set(*px + 1))
     };
-    let px_sub = {
+    let _px_sub = {
         let px = px.clone();
-        Callback::from(move |_| px.set(*px - 1))
+        Callback::from(move |_: i32| px.set(*px - 1))
     };
-    
+
     let mut _input = String::new();
     let _letters = String::from("abcdefgh");
-    
+
     html! {
         <main>
             <style>
                 { format!(":root{} --px: {} {}", "{", *px, "}") } // ref as to avoid a borrow
             </style>
-        
-            // <ct::NineSlice src_begin="tiles/blue" size={*px*12}>
-            <ct::NineSlice src_begin="blue" size={*px*12}>
+
+            // <button onclick={ _px_sub }>{ "-" }</button>
+            // <button onclick={ _px_add }>{ "+" }</button>
+
+            <ct::NineSlice src="assets/img/tl-blue.png" size={*px*12}>
+
                 <div class="header">
-                    { "Yew Game" }
-                </div>
-                <div class="content">
-                    <div class="board">
-                        <button onclick={ px_sub }>{ "-" }</button>
-                        <button onclick={ px_add }>{ "+" }</button>
+                    <div class="title">
+                        {"XadrezPontoCom.com"}
+                    </div>
+                    <div class="tauri-buttons">
+                        {"XadrezPontoCom.com"}
                     </div>
                 </div>
+
+                <div class="content">
+                    <div class="board">
+
+                    </div>
+                    <div class="side-panel">
+
+                    </div>
+                </div>
+
                 <div class="footer"></div>
             </ct::NineSlice>
         </main>

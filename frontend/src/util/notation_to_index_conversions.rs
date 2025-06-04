@@ -1,4 +1,4 @@
-use std::ops::Index;
+#![allow(dead_code)]
 
 pub fn notation_to_index(input: String) -> Option<(usize, usize)> {
     let input = input.to_lowercase();

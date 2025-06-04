@@ -1,7 +1,6 @@
 @import "scss/nine_slice";
 @import "scss/board";
-// @import "scss/variables";
-// @use "scss/variables" as *;
+@import "scss/variables";
 
 @font-face {
   font-family: 'Aseprite';
@@ -19,9 +18,6 @@ body {
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
 }
-
-$px: var(--px);
-$nsz: var(--9sz);
 
 main {
   font-size: calc($px * 1rem);
@@ -51,9 +47,12 @@ main {
     // background-color: rgba(0, 0, 0, 0.25);
   }
   
-  .content { }
-  .sidebar { }
+  .content > * { /* On _board.scss file */ } 
 
-  .header { }
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+  
   .footer { }
 }
