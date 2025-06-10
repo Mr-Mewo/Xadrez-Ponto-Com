@@ -1,10 +1,17 @@
+use serde::{Deserialize, Serialize};
+use wasm_bindgen::{
+    prelude::*,
+};
+use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
-#[allow(unused_imports)] use wasm_bindgen::{prelude::*, JsCast};
-
+// My imports
+use crate::*;
 use crate::custom_tags as ct;
 
 #[function_component(App)]
 pub fn app() -> Html {
+    let onmousemove = get_mouse_callback();
+    
     let px = use_state(|| 4);
 
     let _px_add = {
@@ -16,11 +23,8 @@ pub fn app() -> Html {
         Callback::from(move |_: i32| px.set(*px - 1))
     };
 
-    let mut _input = String::new();
-    let _letters = String::from("abcdefgh");
-
     html! {
-        <main>
+        <main onmousemove={onmousemove}>
             <style>
                 { format!(":root{} --px: {} {}", "{", *px, "}") } // ref as to avoid a borrow
             </style>
@@ -28,21 +32,28 @@ pub fn app() -> Html {
             // <button onclick={ _px_sub }>{ "-" }</button>
             // <button onclick={ _px_add }>{ "+" }</button>
 
-            <ct::NineSlice src="assets/img/tl-blue.png" size={*px*12}>
+            <ct::NineSlice src="9sl/tl-green.png" size={*px*12}>
 
                 <div class="header">
                     <div class="title">
                         {"XadrezPontoCom.com"}
                     </div>
-                    <div class="tauri-buttons">
-                        {"XadrezPontoCom.com"}
-                    </div>
+                    {
+                        if cfg!(feature = "tauri") {
+                            let close = callback_without_args!("close");
+
+                            html! {
+                                <button onclick={close} style="border: none; background: none; color: white; cursor: pointer;">
+                                    {"×"}
+                                </button>
+                            }
+                        } else { html! {} }
+                    }
                 </div>
 
                 <div class="content">
-                    <div class="board">
-
-                    </div>
+                    <ct::ChessBoard pixel_size={*px}/>
+        
                     <div class="side-panel">
 
                     </div>

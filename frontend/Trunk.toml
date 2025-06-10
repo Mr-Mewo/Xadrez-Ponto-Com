@@ -5,7 +5,7 @@ target = "index.html"
 ignore = []
 on_rebuild = ["cls"]
 [[serve.static_dirs]]
-dir = "assets"
+dir = "../assets"
 
 ##[[hooks]]
 ##stage = "build"

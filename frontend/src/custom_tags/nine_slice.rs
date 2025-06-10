@@ -2,16 +2,19 @@ use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
 pub struct NineSliceProps {
+    #[prop_or_default]
+    pub children: Children,
+    #[prop_or_default]
+    pub class: Classes,
+    
     pub src: String,
     #[prop_or(48)]
     pub size: u32,
-    #[prop_or_default]
-    pub children: Children,
 }
 
 #[function_component(NineSlice)]
 pub fn nine_slice(props: &NineSliceProps) -> Html {
-    let src = &props.src;
+    let src = format!("assets/img/{}", &props.src);
     let size = props.size;
 
     let mut slices = Vec::new();
@@ -49,7 +52,7 @@ pub fn nine_slice(props: &NineSliceProps) -> Html {
     }
 
     html! {
-        <div class="nine-slice" style={format!("--9sz: {size}px;")}>
+        <div class={classes!("nine-slice", props.class.clone())} style={format!("--9sz: {size}px;")}>
             { for props.children.iter() }
             <div class="slices">
                 { for slices.into_iter() }

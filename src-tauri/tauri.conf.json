@@ -5,10 +5,11 @@
   "identifier": "exe.xadrezpontocom.app",
   "build": {
     "frontendDist": "../frontend/dist",
-    "beforeDevCommand": "run-web.bat",
-    "beforeBuildCommand": "build-web.bat"
+    "beforeDevCommand": "cd frontend && trunk serve --features tauri",
+    "beforeBuildCommand": "cd frontend && trunk build --release --features tauri"
   },
   "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "title": "XadrezPontoCom.exe",

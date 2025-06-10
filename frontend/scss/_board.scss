@@ -1,29 +1,109 @@
 @import "variables";
 
-@font-face {
-  font-family: 'MewosPixel';
-  src: url("../assets/font/MewosPixelsAH18x2.ttf") format('truetype');
+$_8th: calc(1/8 * 100%);
+
+.square {
+  width: $_8th;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .light {}
+  .dark {}
 }
 
-// font-family: 'MewosPixel', sans-serif;
-
 .content {
+  font-family: 'MewosPixel', sans-serif;
+  font-size: calc($px * 1rem);
+  line-height: 20px;
+  //line-height: calc(1em + $px * -px);
+
   display: flex;
   flex-direction: row;
   justify-content: center;
+  text-align: center;
 
-  > * {
-    max-height: 100%;
-    background-color: rgba(0, 0, 0, 0.25);
+  >.board .slices {
+    z-index: 2;
   }
 
-  > .board {
-    aspect-ratio: 1;
-    margin-right: calc($px*1px);
+  *:not(.slices) {
+    z-index: 1;
   }
 
   > .side-panel {
     min-width: 300px;
     width: 100%;
+  }
+
+  > .board {
+    aspect-ratio: 1;
+    margin-right: calc($px * 1px);
+    position: relative;
+
+    // Area's drawn border
+    padding: calc($px * 8px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .board-row {
+      width: 100%;
+      height: $_8th;
+      display: flex;
+      align-items: center;
+
+      position: relative;
+    }
+
+    .file-labels {
+      position: absolute;
+
+      width: 100%;
+      height: calc($_8th/2);
+      display: flex;
+      justify-content: center;
+      
+      top : 0;
+
+      z-index: 3;
+
+      .file-label {
+        width: 100%;
+        height: 100%;
+        color: #fff;
+
+        :not(&):first-child {
+          top: 0
+        }
+
+        :not(&):last-child {
+          bottom: 0;
+        }
+      }
+    }
+
+    .rank-label {
+      position: absolute;
+
+      height: calc($_8th/2);
+      aspect-ratio: 1;
+      text-align: center;
+      color: #fff;
+
+      z-index: 3;
+
+      :not(&):first-child {
+        top: 0
+      }
+
+      :not(&):last-child {
+        bottom: 0;
+      }
+    }
   }
 }

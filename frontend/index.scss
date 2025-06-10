@@ -7,6 +7,11 @@
   src: url("assets/font/AsepriteFont.ttf") format('truetype');
 }
 
+@font-face {
+  font-family: 'MewosPixel';
+  src: url("assets/font/MewosPixels-RanksAndFiles.ttf") format('truetype');
+}
+
 body {
   font-family: 'Aseprite', sans-serif;
   -webkit-font-smoothing: none; /* Chrome, Safari */
@@ -20,6 +25,8 @@ body {
 }
 
 main {
+  //font-size: calc($px * 1rem);
+  //line-height: calc(1em + $px * -6px);
   font-size: calc($px * 1rem);
   line-height: calc(1em + $px * -6px);
 
@@ -30,29 +37,29 @@ main {
   left: 0;
 
   color: #fff;
-}
 
-.nine-slice {
-  height: inherit;
-
-  padding-left:  calc($px*4px);
-  padding-right: calc($px*4px);
-
-  display: grid;
-  gap: calc($px*1px);
-
-  grid-template-rows: $nsz auto calc($px*5px);
-
-  > * {
-    // background-color: rgba(0, 0, 0, 0.25);
-  }
+  > .nine-slice {
+    height: inherit;
   
-  .content > * { /* On _board.scss file */ } 
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-  }
+    padding-left:  calc($px*4px);
+    padding-right: calc($px*4px);
   
-  .footer { }
+    display: grid;
+    gap: calc($px*1px);
+  
+    grid-template-rows: $nsz auto calc($px*5px);
+  
+    > * {
+      // background-color: rgba(0, 0, 0, 0.25);
+    }
+    
+    .content > * { /* On _board.scss file */ } 
+  
+    .header {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .footer { }
+  }
 }
