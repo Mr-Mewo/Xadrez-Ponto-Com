@@ -63,7 +63,7 @@ $_8th: calc(1/8 * 100%);
     .file-labels {
       position: absolute;
 
-      width: 100%;
+      width: calc(100% - $_8th);
       height: calc($_8th/2);
       display: flex;
       justify-content: center;

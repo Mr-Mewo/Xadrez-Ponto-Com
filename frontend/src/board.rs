@@ -9,10 +9,15 @@ pub struct ChessBoardProps {
     pub class: Classes,
     #[prop_or(4)]
     pub pixel_size: u32,
+    
+    pub white_src: String,
+    pub black_src: String,
 }
 
 #[function_component(ChessBoard)]
 pub fn chess_board(props: &ChessBoardProps) -> Html {
+    let white_src = format!("brd/{}", props.white_src);
+    let black_src = format!("brd/{}", props.black_src);
 
     let label = FILE_LETTERS.chars().map(|c| {
         html! {
@@ -21,7 +26,7 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
     }).collect::<Html>();
 
     html! {
-        <ct::NineSlice src="9sl/area-rnd-3.png" class={classes!("board", props.class.clone())}>
+        <ct::NineSlice src="9sl/area-rnd-4.png" class={classes!("board", props.class.clone())}>
 
             {
                 (0..8).rev().map(|rank| {
@@ -29,8 +34,8 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
                         <div class="board-row">
                             {
                                 (0..8).map(|file| {
-                                    let is_light = (rank + file) % 2 == 0;
-                                    let square_src = if is_light { "brd/white-2.png" } else { "brd/black-3.png" };
+                                    let is_light = (rank + file) % 2 == 1;
+                                    let square_src = if is_light { white_src.clone() } else { black_src.clone() };
                                     let square_class = if is_light { "square light" } else { "square dark" };
                                     html! {
                                         <ct::NineSlice src={square_src} class={square_class} size={props.pixel_size * 4}></ct::NineSlice>

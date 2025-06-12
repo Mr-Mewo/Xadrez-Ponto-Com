@@ -22,7 +22,7 @@ impl Point {
 pub fn track_mouse(event: MouseEvent) -> Point {
     let x = event.client_x();
     let y = event.client_y();
-    log!("Mouse position: x={}, y={}", x, y);
+    // log!("Mouse position: x={}, y={}", x, y);
 
     Point::new(x, y)
 }
