@@ -19,14 +19,20 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
     let white_src = format!("brd/{}", props.white_src);
     let black_src = format!("brd/{}", props.black_src);
 
-    let label = FILE_LETTERS.chars().map(|c| {
+    let file_labels = FILE_LETTERS.chars().map(|c| {
         html! {
             <div class="file-label">{ c }</div>
         }
     }).collect::<Html>();
+    
+    let rank_labels = (0..8).map(|c| {
+        html! {
+            <div class="rank-label">{ {8 - c} }</div>
+        }
+    }).collect::<Html>();
 
     html! {
-        <ct::NineSlice src="9sl/area-rnd-4.png" class={classes!("board", props.class.clone())}>
+        <ct::NineSlice src="9sl/area-rnd.png" size={props.pixel_size*12} class={classes!("board", props.class.clone())}>
 
             {
                 (0..8).rev().map(|rank| {
@@ -35,23 +41,24 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
                             {
                                 (0..8).map(|file| {
                                     let is_light = (rank + file) % 2 == 1;
-                                    let square_src = if is_light { white_src.clone() } else { black_src.clone() };
-                                    let square_class = if is_light { "square light" } else { "square dark" };
+                                    let src = if is_light { white_src.clone() } else { black_src.clone() };
+                                    let class = if is_light { "square light" } else { "square dark" };
                                     html! {
-                                        <ct::NineSlice src={square_src} class={square_class} size={props.pixel_size * 4}></ct::NineSlice>
+                                        <ct::NineSlice {src} {class} size={props.pixel_size * 4}></ct::NineSlice>
                                     }
                                 }).collect::<Html>()
                             }
-                            <div class="rank-label">{ rank + 1 }</div>
-                            <div class="rank-label">{ rank + 1 }</div>
                         </div>
                     }
                 }).collect::<Html>()
             }
-
-            <div class="file-labels"> { label.clone() } </div>
-            <div class="file-labels"> { label } </div>
-
+        
+            <div class="labels">
+                <div class="rank left"> { rank_labels.clone() } </div>
+                <div class="rank right"> { rank_labels } </div>
+                <div class="file top"> { file_labels.clone() } </div>
+                <div class="file bottom"> { file_labels } </div>
+            </div>
         </ct::NineSlice>
 
     }

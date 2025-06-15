@@ -1,109 +1,99 @@
 @import "variables";
 
 $_8th: calc(1/8 * 100%);
+$border: calc($px * 8px);
 
-.square {
-  width: $_8th;
-  height: 100%;
+.board {
+  font-family: 'MewosPixel', sans-serif;
+  font-size: calc($px * 4px);
+  line-height: 1;
+
+  aspect-ratio: 1;
+  position: relative;
+
+  // Area's drawn border
+  padding: $border;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  .light {}
-  .dark {}
-}
+  .slices { z-index: 2 }
+  >:not(.slices) { z-index: 1 }
 
-.content {
-  font-family: 'MewosPixel', sans-serif;
-  font-size: calc($px * 1rem);
-  line-height: 20px;
-  //line-height: calc(1em + $px * -px);
-
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  text-align: center;
-
-  >.board .slices {
-    z-index: 2;
-  }
-
-  *:not(.slices) {
-    z-index: 1;
-  }
-
-  > .side-panel {
-    min-width: 300px;
+  .board-row {
     width: 100%;
-  }
-
-  > .board {
-    aspect-ratio: 1;
-    margin-right: calc($px * 1px);
-    position: relative;
-
-    // Area's drawn border
-    padding: calc($px * 8px);
-
+    height: $_8th;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
 
-    .board-row {
-      width: 100%;
-      height: $_8th;
-      display: flex;
-      align-items: center;
+    position: relative;
 
-      position: relative;
-    }
+    .square {
+      width: $_8th;
+      height: 100%;
 
-    .file-labels {
-      position: absolute;
-
-      width: calc(100% - $_8th);
-      height: calc($_8th/2);
       display: flex;
       justify-content: center;
-      
-      top : 0;
+      align-items: center;
 
-      z-index: 3;
-
-      .file-label {
-        width: 100%;
-        height: 100%;
-        color: #fff;
-
-        :not(&):first-child {
-          top: 0
-        }
-
-        :not(&):last-child {
-          bottom: 0;
-        }
-      }
+      .light{}
+      .dark{}
     }
+  }
 
-    .rank-label {
+  .labels {
+    z-index: 3;
+    
+    pointer-events: none;
+    
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    > * {
       position: absolute;
-
-      height: calc($_8th/2);
-      aspect-ratio: 1;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      white-space: nowrap;
       text-align: center;
-      color: #fff;
-
-      z-index: 3;
-
-      :not(&):first-child {
-        top: 0
-      }
-
-      :not(&):last-child {
-        bottom: 0;
-      }
     }
+
+    .rank {
+      flex-direction: column;
+
+      width: $border;
+      height: calc(100% - $border*2);
+
+      * {
+        height: $_8th;
+        place-content: center;
+      }
+
+      &.left { left: calc($px*1px) }
+      &.right { right: 0 }
+    }
+
+    .file {
+      flex-direction: row;
+      align-items: center;
+
+      width: calc(100% - $border*2);
+      height: $border;
+
+      * {
+        width: $_8th;
+        place-content: center;
+      }
+
+      &.top { top: calc($px*1px) }
+      &.bottom { bottom: calc($px*1px) }
+    }
+
   }
 }

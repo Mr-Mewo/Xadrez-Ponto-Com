@@ -4,15 +4,15 @@
 
 @font-face {
   font-family: 'Aseprite';
-  src: url("assets/font/AsepriteFont.ttf") format('truetype');
+  src: url("../assets/font/AsepriteFont.ttf") format('truetype');
 }
 
 @font-face {
   font-family: 'MewosPixel';
-  src: url("assets/font/MewosPixels-RanksAndFiles.ttf") format('truetype');
+  src: url("../assets/font/MewosPixels-RanksAndFiles.ttf") format('truetype');
 }
 
-body { //
+body { 
   -webkit-font-smoothing: none; /* Chrome, Safari */
   -moz-osx-font-smoothing: grayscale; /* Firefox on macOS */
   font-smooth: never; /* Modern browsers */
@@ -39,9 +39,8 @@ main {
 
   > .nine-slice {
     height: inherit;
-  
-    padding-left:  calc($px*4px);
-    padding-right: calc($px*4px);
+
+    padding: 0 calc($px*4px);
   
     display: grid;
     gap: calc($px*1px);
@@ -53,19 +52,29 @@ main {
     }
     
     .content {
+
       // .board {} -> on _board.scss
 
-      .side-panel {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      text-align: center;
+
+      > .side-panel {
+        margin-left: calc($px*1px);
+
+        min-width: 300px;
+        width: 100%;
+
         background-color: rgba(0, 0, 0, 0.25);
       }
     }
-  
+    
     .header {
       display: flex;
       justify-content: space-between;
 
       -webkit-app-region: drag;
-      cursor: move;
 
       .tauri-buttons {
         button {
@@ -80,26 +89,9 @@ main {
           }
         }
 
-        >:nth-child(1):hover {
-          img {
-            background-color: #2ac0f2;
-          }
-        }
-        >:nth-child(2):hover {
-          img {
-            background-color: #2ac0f2;
-          }
-        }
-        >:nth-child(3):hover {
-          img {
-            background-color: #2ac0f2;
-          }
-        }
-        >:nth-child(4):hover {
-          img {
-            background-color: #b42313;
-          }
-        }
+      .minimize-btn:hover img, .maximize-btn:hover img { background-color: #2ac0f2; }
+      .close-btn:hover img { background-color: #b42313; }
+
       }
     }
     
