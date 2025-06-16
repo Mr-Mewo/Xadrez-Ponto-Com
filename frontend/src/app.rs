@@ -1,7 +1,10 @@
+use std::cmp::{max, min};
+use web_sys::MouseEvent;
 use yew::prelude::*;
 use crate::{
-    *,
-    custom_tags as ct
+    custom_tags as tags,
+    game::ChessBoard,
+    util::get_mouse_callback,
 };
 
 #[function_component(App)]
@@ -11,14 +14,12 @@ pub fn app() -> Html {
 
     let _px_add = {
         let px = px.clone();
-        Callback::from(move |_: i32| px.set(*px + 1))
+        Callback::from(move |_: MouseEvent| px.set(min(*px + 1, 5)))
     };
     let _px_sub = {
         let px = px.clone();
-        Callback::from(move |_: i32| px.set(*px - 1))
+        Callback::from(move |_: MouseEvent| px.set(max(*px - 1, 2)))
     };
-    
-    let tauri = cfg!(feature = "tauri");
 
     html! {
         <main onmousemove={onmousemove}>
@@ -26,30 +27,38 @@ pub fn app() -> Html {
                 { format!(":root{} --px: {} {}", "{", *px, "}") }
             </style>
 
-            <ct::NineSlice src="9sl/tl-purple.png" size={*px*12}>
+            <tags::NineSlice src="9sl/tl-purple.png" class="main" size={*px*12}>
                 <div class="header" data-tauri-drag-region="true">
                     <div class="title">
-                        {if !tauri { "XadrezPontoCom.com" } else { "XadrezPontoCom.exe" }}
+                        {if !cfg!(feature = "tauri") { "XadrezPontoCom.com" } else { "XadrezPontoCom.exe" }}
                     </div>
 
                     // Window buttons, only when in tauri
                     // Could have extra here while on Web
                     // todo: <MORE/>
-                    <ct::TauriWindowButtons />
+                    <div class="header-buttons">
+
+                        <button onclick={_px_sub} class="minus">{"-"}</button>
+                        <button onclick={_px_add} class="plus">{"+"}</button>
+
+                    if cfg!(feature = "tauri") {
+                        <tags::TauriWindowButtons />
+                    }
+                    </div>
                 </div>
 
                 <div class="content">
                     // Possibly unclear, but that's the ENTIRE chessboard
                     
-                    <ct::ChessBoard 
+                    <ChessBoard 
                         pixel_size={*px} 
                         white_src="white-2.png" 
                         black_src="black-1.png"
                     />
 
-                    <div class="side-panel">
+                    <tags::NineSlice src="9sl/tl-green.png" class="side-panel" size={*px*12}>
                         
-                    </div>
+                    </tags::NineSlice>
                 </div>
 
                 // Could turn into padding-bottom, there's nothing inside it, ┐(´～｀;)┌ 
@@ -57,7 +66,7 @@ pub fn app() -> Html {
                 // Why am I ranting about padding?
                 // It's 2AM I should sleep
                 <div class="footer"></div>
-            </ct::NineSlice>
+            </tags::NineSlice>
         </main>
     }
 }

@@ -8,7 +8,7 @@ extern "C" {
 }
 
 #[macro_export]
-macro_rules! callback_without_args {
+macro_rules! tauri_callback_no_args {
     ($cmd:expr) => {
         Callback::from(|_| {
             spawn_local(async move {

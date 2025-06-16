@@ -1,6 +1,6 @@
-@import "scss/nine_slice";
-@import "scss/board";
+@import "scss/content";
 @import "scss/variables";
+@import "scss/nine_slice";
 
 @font-face {
   font-family: 'Aseprite';
@@ -12,7 +12,7 @@
   src: url("../assets/font/MewosPixels-RanksAndFiles.ttf") format('truetype');
 }
 
-body { 
+body {
   -webkit-font-smoothing: none; /* Chrome, Safari */
   -moz-osx-font-smoothing: grayscale; /* Firefox on macOS */
   font-smooth: never; /* Modern browsers */
@@ -21,6 +21,8 @@ body {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+
+  margin: 0;
 }
 
 main {
@@ -31,70 +33,49 @@ main {
 
   width: 100vw;
   height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
 
   color: #fff;
+}
 
-  > .nine-slice {
-    height: inherit;
+.main {
+  height: inherit;
 
-    padding: 0 calc($px*4px);
-  
-    display: grid;
-    gap: calc($px*1px);
-  
-    grid-template-rows: $nsz auto calc($px*5px);
-  
-    > * {
-      // background-color: rgba(0, 0, 0, 0.25);
-    }
-    
-    .content {
+  padding: 0 calc($px*4px);
 
-      // .board {} -> on _board.scss
+  display: grid;
+  gap: calc($px*1px);
 
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      text-align: center;
+  grid-template-rows: $nsz auto calc($px*5px);
+}
 
-      > .side-panel {
-        margin-left: calc($px*1px);
+.header {
+  display: flex;
+  justify-content: space-between;
 
-        min-width: 300px;
-        width: 100%;
+  -webkit-app-region: drag;
 
-        background-color: rgba(0, 0, 0, 0.25);
+  .header-buttons {
+    button {
+      border: none;
+      background: none;
+      color: white;
+
+      * {
+        height: calc($px * 9px);
+        transform: translateY(calc($px * 1px));
       }
     }
-    
-    .header {
-      display: flex;
-      justify-content: space-between;
 
-      -webkit-app-region: drag;
-
-      .tauri-buttons {
-        button {
-          border: none;
-          background: none;
-          color: white;
-          //cursor: pointer;
-
-          img {
-            height: calc($px * 9px);
-            transform: translateY(calc($px * 1px));
-          }
-        }
-
-      .minimize-btn:hover img, .maximize-btn:hover img { background-color: #2ac0f2; }
-      .close-btn:hover img { background-color: #b42313; }
-
-      }
+    .minus {
+      font-size: calc($px * 10px);
     }
-    
-    .footer { }
+
+    .plus {
+      font-size: calc($px * 10px);
+    }
+    .minimize-btn:hover img, .maximize-btn:hover img { background-color: #2ac0f2; }
+    .close-btn:hover img { background-color: #b42313; }
   }
 }
+
+.footer {/* Empty as the void we feel when we remember our old friends */}
