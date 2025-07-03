@@ -1,6 +1,13 @@
 @import "variables";
+@import "board";
 
-// Positioning and setup
+/*
+ * General positioning and the .labels class
+ * Internal board stuff are on _board.scss
+ *
+ * 200 lines of CSS was bugging me, I had to split it
+ */
+
 .content {
   display: flex;
 
@@ -8,7 +15,10 @@
     aspect-ratio: 1;
   }
 
-  // Checks for a 5/4 ratio
+  // Layouts based on a 5/4 screen ratio
+  // Could do more, or to try and perfect this
+  // But I'm pondering temporarily removing it (Only landscape)
+
   @media (width >= 125vh) { // Consider this Landscape
     flex-direction: row;
     justify-content: space-around;
@@ -22,14 +32,14 @@
 
       margin-left: calc($px*1px);
       width: 100%;
-      //width: 25vw;
-      //max-width: 100%;
+      // width: 25vw;
+      // max-width: 100%;
 
       background-color: rgba(255, 255, 255, 0.55);
     }
   }
 
-  @media (width < 125vh) { // Portrait
+  @media (width < 125vh) { // Something like Portrait
     flex-direction: column;
     justify-self: center;
 
@@ -39,7 +49,7 @@
     bottom: 0;
     
     .board {
-      height: 70vh;
+      height: 60vh;
       width: auto;
     }
 
@@ -56,49 +66,13 @@
   }
 }
 
-// Make the 'board' great again!
-$_8th: calc(1/8 * 100%);
-$border: calc($px * 8px);
-
 .board {
-  font-family: 'MewosPixel', sans-serif;
-  font-size: calc($px * 4px);
-  line-height: 1;
-
-  // Area's drawn border
-  padding: $border;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  .slices { z-index: 2 }
-  >:not(.slices) { z-index: 1 }
-
-  .board-row {
-    width: 100%;
-    height: $_8th;
-    display: flex;
-    align-items: center;
-
-    position: relative;
-
-    .square {
-      width: $_8th;
-      height: 100%;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .light{}
-      .dark{}
-    }
-  }
-
   .labels {
-    z-index: 3;
+    font-family: 'MewosPixel', sans-serif;
+    font-size: calc($px * 4px);
+    line-height: 1;
+
+    z-index: 4;
 
     pointer-events: none;
 
@@ -118,36 +92,36 @@ $border: calc($px * 8px);
       text-align: center;
     }
 
-    .rank {
+    .file {
       flex-direction: column;
 
       width: $border;
-      height: calc(100% - $border*2);
+      height: calc(100% - $border * 2);
 
       * {
         height: $_8th;
         place-content: center;
       }
-
-      &.left { left: calc($px*1px) }
-      &.right { right: 0 }
     }
 
-    .file {
+    .rank {
       flex-direction: row;
       align-items: center;
 
-      width: calc(100% - $border*2);
+      width: calc(100% - $border * 2);
       height: $border;
 
       * {
         width: $_8th;
         place-content: center;
       }
-
-      &.top { top: calc($px*1px) }
-      &.bottom { bottom: calc($px*1px) }
     }
-
+    
+    // Weird values?
+    // That's just for text position micro adjustment
+    .left { left: calc($px * 1px) }
+    .right { right: 0 }
+    .top { top: calc($px * 1px) }
+    .bottom { bottom: calc($px * 1px) }
   }
 }

@@ -12,13 +12,11 @@ categories = ["gui", "wasm", "web-programming"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 yew = { version="0.21", features=["csr"] }
-web-sys = { version = "0.3.77" }
+web-sys = { version = "0.3.77", features = ["DomRect", "CssStyleDeclaration"] }
 wasm-bindgen = "0.2.100"
-log = "0.4.27"
 wasm-bindgen-futures = "0.4.50"
-serde = { version = "1.0.219", features = ["derive"] }
-# wasm-bindgen-futures = "0.4.50"
-# tauri = "2.5.1"
+chess = "3.2.0"
+once_cell = "1.21.3"
 
 [features]
 default = []

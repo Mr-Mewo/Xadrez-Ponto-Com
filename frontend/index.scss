@@ -46,6 +46,9 @@ main {
   gap: calc($px*1px);
 
   grid-template-rows: $nsz auto calc($px*5px);
+
+  >.slices { z-index: -2; }
+  >:not(.slices) { z-index: 0; }
 }
 
 .header {
@@ -54,26 +57,38 @@ main {
 
   -webkit-app-region: drag;
 
+  .title img {
+    height: calc($px * 17px);
+    position: absolute;
+    top: calc($px * 2px);
+    
+    pointer-events: none;
+  }
+
   .header-buttons {
+    height: 100%;
+    align-self: end;
+
     button {
       border: none;
       background: none;
       color: white;
 
-      * {
-        height: calc($px * 9px);
+      height: 100%;
+      aspect-ratio: 10/7;
+      padding: 0;
+
+      img {
+        height: calc($px * 14px);
         transform: translateY(calc($px * 1px));
       }
     }
 
-    .minus {
-      font-size: calc($px * 10px);
+
+    .minimize-btn, .maximize-btn, .minus-btn, .plus-btn {
+      &:hover img { background-color: #2ac0f2 }
     }
 
-    .plus {
-      font-size: calc($px * 10px);
-    }
-    .minimize-btn:hover img, .maximize-btn:hover img { background-color: #2ac0f2; }
     .close-btn:hover img { background-color: #b42313; }
   }
 }

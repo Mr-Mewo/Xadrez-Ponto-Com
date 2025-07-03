@@ -1,67 +1,53 @@
 use yew::prelude::*;
-use wasm_bindgen::JsValue;
+use wasm_bindgen::{JsValue, prelude::wasm_bindgen};
 use wasm_bindgen_futures::spawn_local;
 
-use crate::{
-    invoke, // Required because it's the macro's dependency
-    tauri_callback_no_args
-};
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
+    async fn invoke(cmd: &str, args: JsValue) -> JsValue;
+}
+
+macro_rules! tauri_button_callback {
+    ($cmd:expr) => {
+        Callback::from(|_| {
+            spawn_local(async move {
+                invoke($cmd, JsValue::NULL).await;
+            });
+        })
+    }
+}
 
 #[function_component(TauriWindowButtons)]
 pub fn tauri_window_buttons() -> Html {
     let is_maximized = use_state(|| false);
     
-    let minimize = tauri_callback_no_args!("minimize");
-    
+    let minimize = tauri_button_callback!("minimize");
+    let close = tauri_button_callback!("close");
     let maximize = {
         let is_maximized = is_maximized.clone();
         Callback::from(move |_| {
             is_maximized.set(!*is_maximized);
-            tauri_callback_no_args!("maximize").emit(());
+            tauri_button_callback!("maximize").emit(());
         })
     };
-    
 
-    let close = tauri_callback_no_args!("close");
+    
+    let base_src = "assets/img/header-buttons/".to_string();
     
     html! {
         <>
             <button onclick={minimize} class="minimize-btn">
-                <img src="assets/img/tauri/minimize.png" />
+                <img src={format!("{}minimize.png", base_src)} />
             </button>
 
             <button onclick={maximize} class="maximize-btn">
-                <img src={format!("assets/img/tauri/maximize-{}.png", *is_maximized)} />
+                <img src={format!("{}maximize-{}.png", base_src, *is_maximized)} />
             </button>
 
             <button onclick={close} class="close-btn">
-                <img src="assets/img/tauri/close.png" />
+                <img src={format!("{}close.png", base_src)} />
             </button>
         </>
     }
 }
-
-// Possibly removed for good, no real use for it
-/*
-
-    let is_fullscreen = use_state(|| false);
-
-    // ------ //
-
-    let fullscreen = {
-        let is_fullscreen = is_fullscreen.clone();
-        Callback::from(move |_| {
-            is_fullscreen.set(!*is_fullscreen);
-            tauri_callback_no_args!("fullscreen").emit(());
-
-            // log!("{}", *is_fullscreen);
-        })
-    };
-
-    // ------ //
-
-    <button onclick={fullscreen}>
-        <img src={format!("assets/img/tauri/fullscreen-{}.png", *is_fullscreen)} />
-    </button>
-
-*/

@@ -1,0 +1,135 @@
+@import 'variables';
+
+$_8th: calc(1/8 * 100%);
+$border: calc($px * 8px);
+
+// Pieces
+
+.piece-container {
+  position: absolute;
+  width: $_8th;
+  height: $_8th;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 5;
+
+  // This is the container for the piece, it will be animated when eaten
+  >.piece {
+    width: $_8th;
+    height: $_8th;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.piece {
+  aspect-ratio: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 4;
+
+  img {
+    transform: translateY(-6.125%);
+
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    pointer-events: none;
+  }
+}
+
+.eaten {
+  $time: 1s;
+
+  animation: container-eaten $time linear forwards;
+  transform-origin: center center;
+  pointer-events: none;
+
+  z-index: 6;
+
+  >img {
+    animation: piece-eaten $time linear forwards;
+    transform-origin: center center;
+  }
+}
+
+@keyframes container-eaten {
+  20% { transform: translateX(50px) translateY(-50px) }
+  40% { transform: translateX(100px) translateY(-75px) }
+  60% { transform: translateX(150px) translateY(-50px) }
+  100% { transform: translateX(200px) translateY(0); display: none }
+}
+
+@keyframes piece-eaten {
+  20% { width: 85%; rotate: 60deg; }
+  40% { width: 70%; rotate: 130deg }
+  60% { width: 55%; rotate: 200deg; opacity: 0.6 }
+  100% { width: 0; rotate: 270deg; opacity: 0 }
+}
+
+// Squares & hover actions
+
+.square {
+  position: relative;
+  z-index: 12;
+
+  >:not(.slices) {
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  //.piece-pos { align-self: center; justify-self: center }
+  .hover { background-color: rgba(255, 255, 255, 0.5) }
+  .selected { border: calc($px*1) solid white }
+  .movable-to { background-color: rgba(255, 255, 0, 0.5) }
+  .check { background-color: rgba(255, 0, 0, 0.5) }
+}
+
+// Board
+
+.board {
+  // Fake border, it makes the board fit within the drawn border
+  padding: $border;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  >.slices { z-index: 3 }
+  >:not(.slices) { z-index: 0 }
+
+  .board-row {
+    width: 100%;
+    height: $_8th;
+    display: flex;
+    align-items: center;
+
+    position: relative;
+
+    .square {
+      width: $_8th;
+      height: 100%;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .light{}
+      .dark{}
+    }
+  }
+}

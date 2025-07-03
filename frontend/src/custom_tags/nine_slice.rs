@@ -6,12 +6,15 @@ pub struct NineSliceProps {
     pub children: Children,
     #[prop_or_default]
     pub class: Classes,
-    
+    #[prop_or_default]
+    pub id: String,
+
     pub src: String,
     #[prop_or(48)]
     pub size: u32,
 }
 
+// I'm not going to touch this thing EVER AGAIN!
 #[function_component(NineSlice)]
 pub fn nine_slice(props: &NineSliceProps) -> Html {
     let src = format!("assets/img/{}", &props.src);
@@ -52,7 +55,7 @@ pub fn nine_slice(props: &NineSliceProps) -> Html {
     }
 
     html! {
-        <div class={classes!("nine-slice", props.class.clone())} style={format!("--9sz: {size}px;")}>
+        <div class={classes!("nine-slice", props.class.clone())} style={format!("--9sz: {size}px;")} id={props.id.clone()}>
             { for props.children.iter() }
             <div class="slices">
                 { for slices.into_iter() }
