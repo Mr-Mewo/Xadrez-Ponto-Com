@@ -2,8 +2,10 @@
 
 /assets/.WIP/
 
+/frontend/Cargo.lock
 /frontend/dist/
 /frontend/target/
 
+/frontend/Cargo.lock
 /src-tauri/target/
 /src-tauri/gen/schemas

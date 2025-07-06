@@ -1,6 +1,6 @@
 use std::string::String;
 use yew::prelude::*;
-use crate::custom_tags as ct;
+use crate::custom_tags as tags;
 
 const RANK_LETTERS: &str = "abcdefgh";
 
@@ -23,13 +23,13 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
     let rank_labels = RANK_LETTERS.chars().map(|c| {
         html! { <div class="rank-label">{ c }</div> }
     }).collect::<Html>();
-    
+
     let file_labels = (0..8).rev().map(|c| {
         html! { <div class="file-label">{ { c+1 } }</div> }
     }).collect::<Html>();
 
     html! {
-        <ct::NineSlice src="9sl/area-rnd.png" size={props.pixel_size*12} class={classes!("board", props.class.clone())}>
+        <tags::NineSlice src="9sl/area-rnd.png" size={props.pixel_size*12} class={classes!("board", props.class.clone())}>
             {
     // RANKS
                 (0..8).map(|file| {
@@ -44,13 +44,13 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
                                     let id = format!("{}{}", char_rank, 8-file);
     // SQUARE
                                     html! {
-                                        <ct::NineSlice size={props.pixel_size * 4} {src} {class} {id}>
+                                        <tags::NineSlice size={props.pixel_size * 4} {src} {class} {id}>
                                             // Internal square elements
                                             <div class="hover"/> // Mouse hover. Yes, what did you expect?
                                             <div class="selected"/> // Clicked, contains a piece? Still thinking about that
                                             <div class="movable-to"/> // As for there is a possible move to this square
                                             <div class="check"/> // Kings square is in check
-                                        </ct::NineSlice>
+                                        </tags::NineSlice>
                                     }
                                 }).collect::<Html>()
                             }
@@ -58,14 +58,14 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
                     }
                 }).collect::<Html>()
             }
-        
+
             <div class="labels">
                 <div class="file left"> { file_labels.clone() } </div>
                 <div class="file right"> { file_labels } </div>
                 <div class="rank top"> { rank_labels.clone() } </div>
                 <div class="rank bottom"> { rank_labels } </div>
             </div>
-        </ct::NineSlice>
+        </tags::NineSlice>
 
     }
 }

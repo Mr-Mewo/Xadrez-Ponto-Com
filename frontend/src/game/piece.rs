@@ -1,5 +1,3 @@
-use chess::MoveGen;
-use wasm_bindgen::JsCast;
 use web_sys::MouseEvent;
 use yew::{
     html,
@@ -13,9 +11,10 @@ use yew::{
     UseStateHandle
 };
 use crate::{
-    game::{register_piece, game_functions::*},
-    log, get_square_position, get_square_size, get_legal_moves
+    game::game_functions::*,
+    log
 };
+use crate::game::{get_class_at_position, get_piece_at_square, get_square_pos_by_id, get_any_square_size};
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Pos { x: i32, y: i32 }
@@ -30,40 +29,32 @@ pub struct PieceProps {
     pub sqr_id: String,
     pub piece_char: char,
 
-    // Naturally, it starts without a position
     pub prp_sqr_id: UseStateHandle< String >,
     pub prp_pos: UseStateHandle< Pos >
 }
 
 #[function_component(Piece)]
 pub fn piece(props: &PieceProps) -> Html {
-    let mounted = use_state(|| false);
-
     let dragging = use_state(|| false);
     let offset = use_state(|| Pos::new(0, 0));
     let board = use_state( get_board );
     let square_size = use_state(|| 0f64);
 
+    let curr_legal = use_state(Vec::new );
+
     use_effect_with(props.sqr_id.clone(), {
-        let mounted = mounted.clone();
         let prp_sqr_id = props.prp_sqr_id.clone();
         let prp_pos = props.prp_pos.clone();
         let square_size = square_size.clone();
 
-        let props = props.clone();
-
         move |init_sqr_id| {
-            register_piece(&props);
             // if *mounted { return; }
             log!("Initializing piece at {}", init_sqr_id);
             prp_sqr_id.set(init_sqr_id.clone());
-            prp_pos.set(get_square_position!(init_sqr_id.as_str()));
-            mounted.set(true);
-            square_size.set(get_square_size!());
+            prp_pos.set(get_square_pos_by_id(init_sqr_id.as_str()));
+            square_size.set(get_any_square_size());
         }
     });
-
-    let curr_legal = use_state(|| get_legal_moves!(&board, &*props.prp_sqr_id));
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -77,11 +68,8 @@ pub fn piece(props: &PieceProps) -> Html {
         let board = board.clone();
         let curr_legal = curr_legal.clone();
 
-        let mounted = *mounted;
-
 
         move |e: MouseEvent| {
-            if !mounted { return; }
             log!("on_drag_start {}", *sqr_id);
 
             e.prevent_default(); // Prevents default browser click behavior
@@ -92,7 +80,7 @@ pub fn piece(props: &PieceProps) -> Html {
             let aux_board = get_board();
             board.set(aux_board);
 
-            curr_legal.set(get_legal_moves!(&aux_board, &*sqr_id));
+            curr_legal.set(get_legal_moves(&aux_board, &*sqr_id));
         }
     });
 
@@ -104,11 +92,9 @@ pub fn piece(props: &PieceProps) -> Html {
 
         let dragging = dragging.clone();
 
-        let mounted = *mounted;
-
 
         move |e: MouseEvent| {
-            if !mounted || !*dragging { return }
+            if !*dragging { return }
             log!("while_dragging {}", *sqr_id);
 
             pos.set(Pos::new(e.client_x() - offset.x, e.client_y() - offset.y));
@@ -124,12 +110,10 @@ pub fn piece(props: &PieceProps) -> Html {
         let dragging = dragging.clone();
 
         let pos = pos.clone();
-        let mounted = *mounted;
 
 
         move |e: MouseEvent| {
             e.prevent_default(); // Prevents default browser click behavior
-            if !mounted { return; }
             log!("on_drag_end {}", *sqr_id);
 
             dragging.set(false);
@@ -138,10 +122,10 @@ pub fn piece(props: &PieceProps) -> Html {
                 let new_id = element.id();
                 let mv = format!("{}{}", *sqr_id, new_id);
 
-                match move_it(mv.as_str()) {
+                match make_a_move(mv.as_str()) {
                     Ok(_) => {
                         sqr_id.set(new_id.to_string());
-                        pos.set(get_square_position!(new_id.as_str()));
+                        pos.set(get_square_pos_by_id(new_id.as_str()));
 
                         // If it overlaps with another piece
                         if let Some(eaten_piece) = get_piece_at_square( new_id.as_str() ) {
@@ -154,13 +138,13 @@ pub fn piece(props: &PieceProps) -> Html {
                         // Invalid move. Return to the original position
                         log!("Invalid move: {}", e);
 
-                        pos.set(get_square_position!(sqr_id.as_str()));
+                        pos.set(get_square_pos_by_id(sqr_id.as_str()));
                     }
                 }
             }else{
                 // Outside board bounds. Return to the original position
 
-                pos.set(get_square_position!(sqr_id.as_str()));
+                pos.set(get_square_pos_by_id(sqr_id.as_str()));
             }
         }
     });

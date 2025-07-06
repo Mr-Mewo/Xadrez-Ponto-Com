@@ -7,11 +7,10 @@ use wasm_bindgen::JsCast;
 use web_sys::{window, Element, HtmlElement};
 
 #[allow(unused_imports)]
-use crate::{log, get_square_position};
-use crate::game::get_piece_props_from_id;
-use crate::game::piece::PieceProps;
+use crate::log;
+use crate::game::{get_piece_handles, get_square_pos_by_id};
 
-pub static BOARD: Lazy<Mutex<Board>> = Lazy::new(|| Mutex::new(Board::default()));
+static BOARD: Lazy<Mutex<Board>> = Lazy::new(|| Mutex::new(Board::default()));
 pub fn get_board() -> Board { *BOARD.lock().unwrap() }
 
 
@@ -22,7 +21,7 @@ pub fn get_board() -> Board { *BOARD.lock().unwrap() }
  *
  * I'm such a good teacher, ain't I?
  */
-pub fn move_it(m: &str) -> Result<(), chess::Error>{
+pub fn make_a_move(m: &str) -> Result<(), chess::Error>{
     let mut board = BOARD.lock().unwrap();
     let mut result = *board;
 
@@ -41,8 +40,23 @@ pub fn move_it(m: &str) -> Result<(), chess::Error>{
     // Now 'board' at main is the same as 'result'
     // Rust memory management 101 :)
 
+
+    //TODO:
+    // - Send to the server to ask for a move
+    // - Pawn promotion
+    // - Deal with moving all the pieces through this function
+    // - - Allows for a supposed bot to alter the boards state 
+    
+    
+    // let m = (&m[..2], &m[2..]);
+
+    // let piece_prp = get_piece_handles( m.0 ).unwrap();
+    // piece_prp.1.set( m.1.to_string() );
+    // piece_prp.2.set( get_square_pos_by_id( m.1) );
+    
+
     // Dealing with castling
-    let rook_new_position = match (chess_move.get_source(), chess_move.get_dest()) {
+    let rook_pos = match (chess_move.get_source(), chess_move.get_dest()) {
         // White kingside castle
         (chess::Square::E1, chess::Square::G1) => ("h1", "f1"),
         // White queenside castle
@@ -54,38 +68,22 @@ pub fn move_it(m: &str) -> Result<(), chess::Error>{
         _ => ("", ""),
     };
 
-    if !rook_new_position.0.is_empty() {
-        let rook_props = get_piece_props_from_id(rook_new_position.0).unwrap();
-        rook_props.prp_sqr_id.set(rook_new_position.1.to_string());
-        rook_props.prp_pos.set(get_square_position!(rook_new_position.1));
+    if !rook_pos.0.is_empty() {
+        let rook_prp = get_piece_handles( rook_pos.0 ).unwrap();
+        rook_prp.1.set( rook_pos.1.to_string() );
+        rook_prp.2.set( get_square_pos_by_id(rook_pos.1) );
     }
-
 
     Ok(())
 
-
-    //TODO:
-    // OK(dome somewhere else) - Move validation
-    // - Send to the server to ask for a move
 }
 
-pub fn get_class_at_position(class: &str, x: i32, y: i32) -> Option<Element> {
-    window()?.document()?.elements_from_point(x as f32, y as f32)
-        .iter()
-        .find_map(|el| {
-            el.dyn_ref::<Element>()
-                .filter(|e| e.class_name().contains(class))
-                .cloned()
-        })
-}
-
-pub fn get_piece_at_square(id: &str) -> Option<HtmlElement> {
-    let id = format!("p-{}", id);
-
-    let doc = window().unwrap().document().unwrap();
-    let element = doc.get_element_by_id(&id)?;
-
-    element.dyn_into::<HtmlElement>().ok()
+pub fn get_legal_moves(board: &Board, square: &str) -> Vec<String> {
+    MoveGen::new_legal(board)
+        .map(|m| m.to_string())
+        .filter(|s| s.starts_with(square))
+        .map(|s| s[2..].to_string())
+        .collect::<Vec<String>>()
 }
 
 pub fn piece_src(p: char) -> String {

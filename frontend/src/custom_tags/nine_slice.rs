@@ -26,16 +26,16 @@ pub fn nine_slice(props: &NineSliceProps) -> Html {
         for v in 0..3 {
             let width = if h == 1 { format!("calc(100% - {size}*2px)") } else { format!("{size}px") };
             let height = if v == 1 { format!("calc(100% - {size}*2px)") } else { format!("{size}px") };
-            
+
             let bg_sz_x = if h == 1 { "1000%".to_string() } else { format!("{}px", size*3) };
             let bg_sz_y = if v == 1 { "1000%".to_string() } else { format!("{}px", size*3) };
-            
+
             let bg_pos_x = if h == 1 { "50%".to_string() } else { format!("{}px", -(h * size as i32)) };
             let bg_pos_y = if v == 1 { "50%".to_string() } else { format!("{}px", -(v * size as i32)) };
-            
+
             let left = if h == 1 { format!("{size}px") } else { format!("calc((50% - {size}px/2)*{h})") };
             let top = if v == 1 { format!("{size}px") } else { format!("calc((50% - {size}px/2)*{v})") };
-            
+
             let style = format!(
                 "position: absolute;
                 width: {width};
@@ -47,7 +47,7 @@ pub fn nine_slice(props: &NineSliceProps) -> Html {
                 left: {left};
                 top: {top};"
             );
-            
+
             slices.push(html! {
                 <div class="slice" style={ style }></div>
             });

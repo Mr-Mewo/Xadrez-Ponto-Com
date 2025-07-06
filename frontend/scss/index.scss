@@ -1,15 +1,15 @@
-@import "scss/content";
-@import "scss/variables";
-@import "scss/nine_slice";
+@import "content";
+@import "variables";
+@import "nine_slice";
 
 @font-face {
   font-family: 'Aseprite';
-  src: url("../assets/font/AsepriteFont.ttf") format('truetype');
+  src: url("../../assets/font/AsepriteFont.ttf") format('truetype');
 }
 
 @font-face {
   font-family: 'MewosPixel';
-  src: url("../assets/font/MewosPixels-RanksAndFiles.ttf") format('truetype');
+  src: url("../../assets/font/MewosPixels-RanksAndFiles.ttf") format('truetype');
 }
 
 body {

@@ -1,13 +1,13 @@
 use yew::{function_component, html, Html};
-use crate::game::BOARD;
 use crate::log;
-use crate::game::piece::Piece;
+use crate::game::{piece::Piece, get_board, register_piece};
+use crate::game::piece::PieceProps;
 
 static RANK_LETTERS: &str = "abcdefgh";
 
 #[function_component(PieceParent)]
 pub fn piece_parent() -> Html {
-    let board = BOARD.lock().unwrap().to_string();
+    let board = get_board().to_string();
     log!("{}:", board);
     let board = board.split(" ").next().unwrap();
 
@@ -35,8 +35,8 @@ pub fn piece_parent() -> Html {
 
                 pieces.push(html! {
                     <PieceWrapper
-                        piece_char={piece}
-                        sqr_id={square_id}
+                        in_piece_char={piece}
+                        in_sqr_id={square_id}
                     />
                 });
 
@@ -45,13 +45,17 @@ pub fn piece_parent() -> Html {
         }
     }
 
-    pieces.into_iter().collect::<Html>()
+    html! {
+        <div class="piece-parent">
+            { pieces.into_iter().collect::<Html>() }
+        </div>
+    }
 }
 
 #[derive(yew::Properties, PartialEq)]
 pub struct PieceWrapperProps {
-    pub piece_char: char,
-    pub sqr_id: String,
+    pub in_piece_char: char,
+    pub in_sqr_id: String,
 }
 
 #[function_component(PieceWrapper)]
@@ -62,12 +66,21 @@ pub fn piece_wrapper(props: &PieceWrapperProps) -> Html {
     let piece_sqr_id = use_state( String::new );
     let piece_pos = use_state(|| Pos::new(0, 0));
 
+    let prp = PieceProps {
+        piece_char: props.in_piece_char,
+        sqr_id: props.in_sqr_id.clone(),
+        prp_sqr_id: piece_sqr_id,
+        prp_pos: piece_pos,
+    };
+
+    register_piece(&prp);
+
     html! {
         <Piece
-            piece_char={props.piece_char}
-            sqr_id={props.sqr_id.clone()}
-            prp_sqr_id={piece_sqr_id}
-            prp_pos={piece_pos}
+            piece_char={prp.piece_char}
+            sqr_id={prp.sqr_id}
+            prp_sqr_id={prp.prp_sqr_id}
+            prp_pos={prp.prp_pos}
         />
     }
 }
