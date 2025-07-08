@@ -1,7 +1,14 @@
 use yew::{function_component, html, Html};
+use crate::{
+    game::{
+        piece::{Piece, PieceProps},
+        get_board,
+        register_piece
+    }
+};
+
+#[allow(unused_imports)]
 use crate::log;
-use crate::game::{piece::Piece, get_board, register_piece};
-use crate::game::piece::PieceProps;
 
 static RANK_LETTERS: &str = "abcdefgh";
 
@@ -30,8 +37,6 @@ pub fn piece_parent() -> Html {
                 let rank = RANK_LETTERS.chars().nth(files).unwrap();
                 let file = 8 - ranks;
                 let square_id = format!("{}{}", rank, file);
-
-                log!("Adding piece {} at {}", piece, square_id);
 
                 pieces.push(html! {
                     <PieceWrapper

@@ -6,6 +6,10 @@
 /frontend/dist/
 /frontend/target/
 
-/frontend/Cargo.lock
+/src-tauri/Cargo.lock
 /src-tauri/target/
 /src-tauri/gen/schemas
+
+/backend/Cargo.lock
+/backend/target/
+/backend/gen/schemas

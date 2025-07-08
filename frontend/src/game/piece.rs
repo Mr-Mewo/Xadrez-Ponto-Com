@@ -11,10 +11,14 @@ use yew::{
     UseStateHandle
 };
 use crate::{
-    game::game_functions::*,
-    log
+    game::{
+        game_functions::*,
+        scrapping_functions::*
+    },
+    util::piece_src,
 };
-use crate::game::{get_class_at_position, get_piece_at_square, get_square_pos_by_id, get_any_square_size};
+#[allow(unused_imports)]
+use crate::log;
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Pos { x: i32, y: i32 }
@@ -49,7 +53,7 @@ pub fn piece(props: &PieceProps) -> Html {
 
         move |init_sqr_id| {
             // if *mounted { return; }
-            log!("Initializing piece at {}", init_sqr_id);
+            // log!("Initializing piece at {}", init_sqr_id);
             prp_sqr_id.set(init_sqr_id.clone());
             prp_pos.set(get_square_pos_by_id(init_sqr_id.as_str()));
             square_size.set(get_any_square_size());
@@ -70,7 +74,7 @@ pub fn piece(props: &PieceProps) -> Html {
 
 
         move |e: MouseEvent| {
-            log!("on_drag_start {}", *sqr_id);
+            // log!("on_drag_start {}", *sqr_id);
 
             e.prevent_default(); // Prevents default browser click behavior
 
@@ -87,7 +91,7 @@ pub fn piece(props: &PieceProps) -> Html {
     /* ------------------------------------------------------------------------------------------ */
 
     let while_dragging = Callback::from({
-        let sqr_id = props.prp_sqr_id.clone();
+        // let sqr_id = props.prp_sqr_id.clone();
         let pos = props.prp_pos.clone();
 
         let dragging = dragging.clone();
@@ -95,7 +99,7 @@ pub fn piece(props: &PieceProps) -> Html {
 
         move |e: MouseEvent| {
             if !*dragging { return }
-            log!("while_dragging {}", *sqr_id);
+            // log!("while_dragging {}", *sqr_id);
 
             pos.set(Pos::new(e.client_x() - offset.x, e.client_y() - offset.y));
         }
@@ -104,6 +108,8 @@ pub fn piece(props: &PieceProps) -> Html {
     /* ------------------------------------------------------------------------------------------ */
 
     let on_drag_end = Callback::from({
+        let props = props.clone();
+
         let sqr_id = props.prp_sqr_id.clone();
         let pos = props.prp_pos.clone();
 
@@ -114,7 +120,7 @@ pub fn piece(props: &PieceProps) -> Html {
 
         move |e: MouseEvent| {
             e.prevent_default(); // Prevents default browser click behavior
-            log!("on_drag_end {}", *sqr_id);
+            // log!("on_drag_end {}", *sqr_id);
 
             dragging.set(false);
 
@@ -122,10 +128,10 @@ pub fn piece(props: &PieceProps) -> Html {
                 let new_id = element.id();
                 let mv = format!("{}{}", *sqr_id, new_id);
 
-                match make_a_move(mv.as_str()) {
+                match make_move(mv.as_str(), Some(&props.clone())) {
                     Ok(_) => {
-                        sqr_id.set(new_id.to_string());
-                        pos.set(get_square_pos_by_id(new_id.as_str()));
+                        // sqr_id.set(new_id.to_string());
+                        // pos.set(get_square_pos_by_id(new_id.as_str()));
 
                         // If it overlaps with another piece
                         if let Some(eaten_piece) = get_piece_at_square( new_id.as_str() ) {
@@ -134,9 +140,9 @@ pub fn piece(props: &PieceProps) -> Html {
                             eaten_piece.set_id("");
                         }
                     },
-                    Err(e) => {
+                    Err(_e) => {
                         // Invalid move. Return to the original position
-                        log!("Invalid move: {}", e);
+                        // log!("Invalid move: {}", e);
 
                         pos.set(get_square_pos_by_id(sqr_id.as_str()));
                     }
@@ -159,29 +165,43 @@ pub fn piece(props: &PieceProps) -> Html {
 
     /* ------------------------------------------------------------------------------------------ */
 
-    html! {
-        // Funny thing: Hovering off the piece will make it unable to activate the Callbacks
-        // The solution is to transfer the mouse events to a div that covers the entire screen
-        // It'll ensure the events are always captured
+    if props.piece_char.is_ascii_uppercase() {
+        html! {
+            // Funny thing: Hovering off the piece will make it unable to activate the Callbacks
+            // The solution is to transfer the mouse events to a div that covers the entire screen
+            // It'll ensure the events are always captured
 
-        <>
+            <>
+                <div
+                    {style} class={classes!("piece", props.piece_char.to_string(), if *dragging { "dragging" } else { "" })}
+                    id = {format!("p-{}", *props.prp_sqr_id)}
+                    onmousedown = {on_drag_start}
+                >
+                    <img
+                        src={ piece_src(props.piece_char) }
+                        draggable="false"
+                    />
+                </div>
+                if *dragging {
+                    <div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 5; cursor: grabbing;"
+                        onmousemove = {while_dragging}
+                        onmouseup = {on_drag_end.clone()}
+                        onmouseleave = {on_drag_end}
+                    />
+                }
+            </>
+        }
+    }else{
+        html! {
             <div
                 {style} class={classes!("piece", props.piece_char.to_string(), if *dragging { "dragging" } else { "" })}
-                id = {format!("p-{}", *props.prp_sqr_id)}
-                onmousedown = {on_drag_start}
+                    id = {format!("p-{}", *props.prp_sqr_id)}
             >
                 <img
                     src={ piece_src(props.piece_char) }
                     draggable="false"
                 />
             </div>
-            if *dragging {
-                <div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 5; cursor: grabbing;"
-                    onmousemove = {while_dragging}
-                    onmouseup = {on_drag_end.clone()}
-                    onmouseleave = {on_drag_end}
-                />
-            }
-        </>
+        }
     }
 }

@@ -61,13 +61,15 @@ main {
     height: calc($px * 17px);
     position: absolute;
     top: calc($px * 2px);
-    
-    pointer-events: none;
+
+    @include unselectable();
   }
 
   .header-buttons {
     height: 100%;
     align-self: end;
+
+    -webkit-app-region: no-drag;
 
     button {
       border: none;

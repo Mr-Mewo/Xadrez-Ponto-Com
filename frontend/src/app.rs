@@ -5,9 +5,13 @@ use crate::{
     game,
 };
 
+use crate::websocket::*;
+
 #[function_component(App)]
 pub fn app() -> Html {
     let px = use_state(|| 4 );
+
+    init_websocket("ws://127.0.0.1:7878");
 
     html! {
         <main>

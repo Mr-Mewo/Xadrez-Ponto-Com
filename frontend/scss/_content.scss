@@ -27,15 +27,17 @@
       display: flex;
       flex-direction: column;
 
-      overflow-x: auto;
-      overflow-y: scroll;
-
       margin-left: calc($px*1px);
       width: 100%;
-      // width: 25vw;
-      // max-width: 100%;
 
-      background-color: rgba(255, 255, 255, 0.55);
+      overflow-x: auto;
+      overflow-y: hidden;
+      -ms-overflow-y: hidden;
+      scrollbar-width: none;
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 
@@ -47,7 +49,7 @@
     max-width: fit-content;
     top: 0;
     bottom: 0;
-    
+
     .board {
       height: 60vh;
       width: auto;
@@ -56,12 +58,18 @@
     .side-panel {
       display: flex;
       flex-direction: column;
-      
-      overflow-x: scroll;
-      overflow-y: auto;
 
       margin-top: calc($px*1px);
       height: 100%;
+
+      overflow-x: hidden;
+      overflow-y: auto;
+      -ms-overflow-x: hidden;
+      scrollbar-width: none;
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 }
@@ -82,6 +90,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @include unselectable();
 
     > * {
       position: absolute;
@@ -116,7 +126,7 @@
         place-content: center;
       }
     }
-    
+
     // Weird values?
     // That's just for text position micro adjustment
     .left { left: calc($px * 1px) }

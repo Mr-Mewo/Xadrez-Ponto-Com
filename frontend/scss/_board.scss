@@ -24,6 +24,8 @@ $border: calc($px * 8px);
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @include unselectable();
   }
 }
 
@@ -43,6 +45,9 @@ $border: calc($px * 8px);
     aspect-ratio: 1;
     object-fit: contain;
     pointer-events: none;
+
+    @include unselectable();
+
   }
 }
 
