@@ -154,6 +154,7 @@ version = "0.1.0"
 dependencies = [
  "chess",
  "once_cell",
+ "serde_json",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",

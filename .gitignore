@@ -13,3 +13,5 @@
 /backend/Cargo.lock
 /backend/target/
 /backend/gen/schemas
+
+/backend/engines/*

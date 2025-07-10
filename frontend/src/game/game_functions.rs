@@ -4,17 +4,11 @@ use std::{
 };
 use once_cell::sync::Lazy;
 use chess::{Board, ChessMove, MoveGen};
-use crate::{
-    websocket::{
-        is_connected,
-        send_message,
-    },
-    game::{
-        get_square_pos_by_id, get_piece_handles, update_piece_key,
-        piece::PieceProps,
-    }
+use crate::game::{
+    get_piece_handles, get_square_pos_by_id, piece::PieceProps,
+    update_piece_key,
 };
-
+use crate::game::get_piece_at_square;
 #[allow(unused_imports)]
 use crate::log;
 
@@ -41,32 +35,34 @@ pub fn make_move(m: &str, prp_ref: Option<&PieceProps>) -> Result<(), chess::Err
         return Err(chess::Error::InvalidSanMove);
     }
 
-    if is_connected() {
-        let move_data = format!(r#"{{"type":"move","move":"{}","fen":"{}"}}"#,
-                                m, result.to_string());
-        send_message(&move_data);
-    }
-
     board.make_move(chess_move, &mut result);
     *board = result;
     // Now 'board' at main is the same as 'result'
     // Rust memory management 101 :)
 
+    if let Some(eaten_piece) = get_piece_at_square( chess_move.get_dest().to_string().as_str() ) {
+        // Places the "eaten" class on the eaten piece
+        eaten_piece.set_class_name(format!("{} eaten", eaten_piece.class_name()).as_str());
+        eaten_piece.set_id("");
+    }
 
     //TODO:
     // (Somewhere else) Send to the server to ask for a move
     // - Pawn promotion
     // (Ok) Deal with moving all the pieces through this function
     // - - Allows for a supposed bot to alter the boards state
+    // (somehow) - en-peasant
 
 
-    // let m = (&m[..2], &m[2..]);
+    if board.en_passant()
+        .is_some_and( |s| {s == chess_move.get_source()} ){
+        if let Some(captured_pawn) = get_piece_at_square(&format!("{:?}{:?}", chess_move.get_dest().get_file(), chess_move.get_source().get_rank())) {
+            captured_pawn.set_class_name(format!("{} eaten", captured_pawn.class_name()).as_str());
+            captured_pawn.set_id("");
+        }
+    }
 
-    // let piece_prp = get_piece_handles( m.0 ).unwrap();
-    // piece_prp.1.set( m.1.to_string() );
-    // piece_prp.2.set( get_square_pos_by_id( m.1) );
-
-    // Dealing with castling
+    // Castling
     let rook_pos = match (chess_move.get_source(), chess_move.get_dest()) {
         // White kingside castle
         (chess::Square::E1, chess::Square::G1) => ("h1", "f1"),

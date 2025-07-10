@@ -3,6 +3,7 @@ mod piece_parent;
 mod game_functions;
 mod scrapping_functions;
 mod piece_registry;
+pub mod websocket;
 
 pub use piece_parent::*;
 pub use game_functions::*;

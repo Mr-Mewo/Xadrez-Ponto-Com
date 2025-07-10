@@ -1,12 +1,12 @@
 use web_sys::MouseEvent;
 use yew::{
-    html,
-    Html,
     classes,
     function_component,
+    html,
     use_effect_with,
     use_state,
     Callback,
+    Html,
     Properties,
     UseStateHandle
 };
@@ -16,6 +16,9 @@ use crate::{
         scrapping_functions::*
     },
     util::piece_src,
+};
+use crate::game::websocket::{is_connected,
+                             send_message
 };
 #[allow(unused_imports)]
 use crate::log;
@@ -74,8 +77,6 @@ pub fn piece(props: &PieceProps) -> Html {
 
 
         move |e: MouseEvent| {
-            // log!("on_drag_start {}", *sqr_id);
-
             e.prevent_default(); // Prevents default browser click behavior
 
             dragging.set(true);
@@ -84,14 +85,13 @@ pub fn piece(props: &PieceProps) -> Html {
             let aux_board = get_board();
             board.set(aux_board);
 
-            curr_legal.set(get_legal_moves(&aux_board, &*sqr_id));
+            curr_legal.set(get_legal_moves(&aux_board, &sqr_id));
         }
     });
 
     /* ------------------------------------------------------------------------------------------ */
 
     let while_dragging = Callback::from({
-        // let sqr_id = props.prp_sqr_id.clone();
         let pos = props.prp_pos.clone();
 
         let dragging = dragging.clone();
@@ -99,7 +99,6 @@ pub fn piece(props: &PieceProps) -> Html {
 
         move |e: MouseEvent| {
             if !*dragging { return }
-            // log!("while_dragging {}", *sqr_id);
 
             pos.set(Pos::new(e.client_x() - offset.x, e.client_y() - offset.y));
         }
@@ -120,7 +119,6 @@ pub fn piece(props: &PieceProps) -> Html {
 
         move |e: MouseEvent| {
             e.prevent_default(); // Prevents default browser click behavior
-            // log!("on_drag_end {}", *sqr_id);
 
             dragging.set(false);
 
@@ -130,25 +128,25 @@ pub fn piece(props: &PieceProps) -> Html {
 
                 match make_move(mv.as_str(), Some(&props.clone())) {
                     Ok(_) => {
-                        // sqr_id.set(new_id.to_string());
-                        // pos.set(get_square_pos_by_id(new_id.as_str()));
+                        if is_connected() && props.piece_char.is_ascii_uppercase() {
+                            // Valid
+                            // this part used to be more useful
+                            // Don't cry :(
 
-                        // If it overlaps with another piece
-                        if let Some(eaten_piece) = get_piece_at_square( new_id.as_str() ) {
-                            // Places the "eaten" class on the eaten piece
-                            eaten_piece.set_class_name(format!("{} eaten", eaten_piece.class_name()).as_str());
-                            eaten_piece.set_id("");
+                            let move_data = format!(r#"{{"type":"move","move":"{}","fen":"{}","depth":9}}"#,
+                            mv, get_board());
+
+                            send_message(&move_data);
                         }
                     },
                     Err(_e) => {
                         // Invalid move. Return to the original position
-                        // log!("Invalid move: {}", e);
 
                         pos.set(get_square_pos_by_id(sqr_id.as_str()));
                     }
                 }
             }else{
-                // Outside board bounds. Return to the original position
+                // Outside bounds. Return to the original position
 
                 pos.set(get_square_pos_by_id(sqr_id.as_str()));
             }
@@ -165,7 +163,7 @@ pub fn piece(props: &PieceProps) -> Html {
 
     /* ------------------------------------------------------------------------------------------ */
 
-    if props.piece_char.is_ascii_uppercase() {
+    if true { //props.piece_char.is_ascii_uppercase() {
         html! {
             // Funny thing: Hovering off the piece will make it unable to activate the Callbacks
             // The solution is to transfer the mouse events to a div that covers the entire screen

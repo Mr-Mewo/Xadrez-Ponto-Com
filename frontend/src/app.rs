@@ -5,7 +5,7 @@ use crate::{
     game,
 };
 
-use crate::websocket::*;
+use crate::game::websocket::*;
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -21,6 +21,21 @@ pub fn app() -> Html {
 
             <div class="piece-parent">
                 <game::PieceParent/>
+            </div>
+
+            <div class="overlays">
+                <div id="win">
+                    <p>{"YIPPIEEEE :)"}</p>
+                    <p>{"Congrats you won!!"}</p>
+                </div>
+                <div id="lose">
+                    <p>{"BIG YIKES :("}</p>
+                    <p>{"Better luck next time!"}</p>
+                </div>
+                <div id="draw">
+                    <p>{"wait what...."}</p>
+                    <p>{"..."}</p>
+                </div>
             </div>
 
             <tags::NineSlice src="9sl/tl-purple-big.png" class="main" size={*px*19}>

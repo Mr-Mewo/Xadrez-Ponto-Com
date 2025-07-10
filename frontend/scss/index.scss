@@ -95,4 +95,48 @@ main {
   }
 }
 
+.overlays {
+  .active {
+    visibility: visible;
+  }
+
+  .win {
+
+  }
+  .lose {
+
+  }
+  .draw {
+
+  }
+
+  > div {
+    visibility: hidden;
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100vw;
+    height: 100vh;
+
+    z-index: 10;
+
+    :first-child {
+      font-family: 'Aseprite', sans-serif;
+
+      font-size: calc($px * 1rem);
+      line-height: calc(1em + $px * -6px);
+    }
+
+    :last-child {
+      font-family: 'MewosPixel', sans-serif;
+
+      font-size: calc($px * 4px);
+      line-height: 1;
+    }
+  }
+}
+
 .footer {/* Empty as the void we feel when we remember our old friends */}
