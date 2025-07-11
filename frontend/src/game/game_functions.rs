@@ -4,10 +4,7 @@ use std::{
 };
 use once_cell::sync::Lazy;
 use chess::{Board, ChessMove, MoveGen};
-use crate::game::{
-    get_piece_handles, get_square_pos_by_id, piece::PieceProps,
-    update_piece_key,
-};
+use crate::game::{get_element_by_id, get_piece_handles, get_square_pos_by_id, piece::PieceProps, update_piece_key};
 use crate::game::get_piece_at_square;
 #[allow(unused_imports)]
 use crate::log;
@@ -78,6 +75,23 @@ pub fn make_move(m: &str, prp_ref: Option<&PieceProps>) -> Result<(), chess::Err
     // Adds it to the end, gets passed to the function
     let m = format!("{}{}{}", m, rook_pos.0, rook_pos.1);
     piece_position_update(m.as_str(), prp_ref);
+
+
+    // Fuck it all, it's done
+    // Game over m8
+    match board.status() {
+        chess::BoardStatus::Checkmate => {
+            if board.side_to_move() != chess::Color::White {
+                get_element_by_id("win").unwrap().set_class_name("visible");
+            } else {
+                get_element_by_id("lose").unwrap().set_class_name("visible");
+            }
+        }
+        chess::BoardStatus::Stalemate => {
+            get_element_by_id("draw").unwrap().set_class_name("visible");
+        }
+        _ => {}
+    }
 
     Ok(())
 }

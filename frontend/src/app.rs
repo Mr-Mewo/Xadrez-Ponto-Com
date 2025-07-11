@@ -26,11 +26,11 @@ pub fn app() -> Html {
             <div class="overlays">
                 <div id="win">
                     <p>{"YIPPIEEEE :)"}</p>
-                    <p>{"Congrats you won!!"}</p>
+                    <p>{"congrats you won!!"}</p>
                 </div>
                 <div id="lose">
                     <p>{"BIG YIKES :("}</p>
-                    <p>{"Better luck next time!"}</p>
+                    <p>{"better luck next time!"}</p>
                 </div>
                 <div id="draw">
                     <p>{"wait what...."}</p>

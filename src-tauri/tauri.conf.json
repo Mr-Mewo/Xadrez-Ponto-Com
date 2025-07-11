@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "XadrezPontoCom.exe",
-        "width": 800,
-        "height": 600,
+        "width": 1820,
+        "height": 980,
         "decorations": false,
         "fullscreen": false,
         "resizable": true

@@ -38,7 +38,7 @@ pub fn chess_board(props: &ChessBoardProps) -> Html {
                             {
     // FILES
                                 RANK_LETTERS.chars().enumerate().map(|(rank, char_rank)| {
-                                    let is_light = (rank + file) % 2 == 1;
+                                    let is_light = (rank + file) % 2 == 0;
                                     let src = if is_light { white_src.clone() } else { black_src.clone() };
                                     let class = if is_light { "square light" } else { "square dark" };
                                     let id = format!("{}{}", char_rank, 8-file);

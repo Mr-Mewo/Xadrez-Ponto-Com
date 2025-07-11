@@ -31,3 +31,6 @@ pub fn get_piece_at_square(id: &str) -> Option<HtmlElement> {
     element.dyn_into::<HtmlElement>().ok()
 }
 
+pub fn get_element_by_id(id: &str) -> Option<Element> {
+    get_doc!().get_element_by_id(id)
+}

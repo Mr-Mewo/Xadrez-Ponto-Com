@@ -12,6 +12,11 @@
   src: url("../../assets/font/MewosPixels-RanksAndFiles.ttf") format('truetype');
 }
 
+@font-face {
+  font-family: 'MewosPixel-full';
+  src: url("../../assets/font/MewosPixels-Full.ttf") format('truetype');
+}
+
 body {
   -webkit-font-smoothing: none; /* Chrome, Safari */
   -moz-osx-font-smoothing: grayscale; /* Firefox on macOS */
@@ -95,19 +100,22 @@ main {
   }
 }
 
+
 .overlays {
-  .active {
+
+  @include unselectable();
+
+  .visible {
     visibility: visible;
   }
-
-  .win {
-
+  #win {
+    background-color: #57c52b80;
   }
-  .lose {
-
+  #lose {
+    background-color: #b4231380;
   }
-  .draw {
-
+  #draw {
+    background-color: #f4c04780;
   }
 
   > div {
@@ -115,6 +123,7 @@ main {
     position: absolute;
 
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 
@@ -126,15 +135,15 @@ main {
     :first-child {
       font-family: 'Aseprite', sans-serif;
 
-      font-size: calc($px * 1rem);
-      line-height: calc(1em + $px * -6px);
+      font-size: calc($px * 2rem);
+      line-height: .5;
     }
 
     :last-child {
-      font-family: 'MewosPixel', sans-serif;
+      font-family: 'MewosPixel-full', sans-serif;
 
-      font-size: calc($px * 4px);
-      line-height: 1;
+      font-size: calc($px * 1rem);
+      line-height: 0;
     }
   }
 }

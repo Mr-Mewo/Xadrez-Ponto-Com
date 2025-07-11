@@ -84,8 +84,14 @@ pub fn piece(props: &PieceProps) -> Html {
 
             let aux_board = get_board();
             board.set(aux_board);
+            let legal = get_legal_moves(&aux_board, &sqr_id);
 
-            curr_legal.set(get_legal_moves(&aux_board, &sqr_id));
+            for move_sqr in &legal {
+                let selected_square = get_element_by_id(move_sqr).unwrap().query_selector(".movable-to").unwrap().unwrap();
+                selected_square.set_class_name(format!("{} visible", selected_square.class_name()).as_str());
+            }
+
+            curr_legal.set(legal);
         }
     });
 
@@ -115,12 +121,19 @@ pub fn piece(props: &PieceProps) -> Html {
         let dragging = dragging.clone();
 
         let pos = pos.clone();
+        ;
+        let curr_legal = curr_legal.clone();
 
 
         move |e: MouseEvent| {
             e.prevent_default(); // Prevents default browser click behavior
 
             dragging.set(false);
+
+            for move_sqr in &*curr_legal {
+                let selected_square = get_element_by_id(move_sqr).unwrap().query_selector(".movable-to").unwrap().unwrap();
+                selected_square.set_class_name(selected_square.class_name().replace(" visible", "").as_str());
+            }
 
             if let Some(element) = get_class_at_position("square", pos.x, pos.y) {
                 let new_id = element.id();
